@@ -320,7 +320,7 @@ bcl2fastq \
 </tbody>
 </table>
 
-The reads obtained after demultiplexing will be in FATSQ format from the experiment including Read1(R1) and Read2(R2) files for the Whole Transcriptome Analsysis (WTA) RNA library, Sample Tag and BD® AbSeq libraries.
+The reads obtained after demultiplexing will be in FASTQ format from the experiment including Read1 (R1) and Read2 (R2) files for the Whole Transcriptome Analsysis (WTA) RNA library, Sample Tag and BD AbSeq libraries.
 
 The assays are used to create sequencing libraries from single-cell multiomic experiments. R1 reads contain information on the cell label and molecular identifier, whereas, R2 reads contain information on the bioproduct.
 
