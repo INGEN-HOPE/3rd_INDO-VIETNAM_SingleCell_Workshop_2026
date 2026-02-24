@@ -63,7 +63,17 @@ bash Miniconda3-latest-Linux-x86_64.sh
 
 > <img src="images/media/image47.png" style="width:5.42343in;height:1.2608in" />
 
-8.  Close and re-open your terminal window for the installation to fully take effect, or use the following command to refresh the terminal.
+8.  Close and re-open your terminal window for the installation to fully take effect, or use the following command to refresh the terminal. To check if conda installed correctly type
+
+```r
+conda --version
+```
+
+10.  If restarting the terminal doesn't initiate conda you may need to export the path using following command. Change the path to your conda bin folder.
+
+```r
+export PATH="~/miniconda3/bin:$PATH"
+```
 
 ```r
 source ~/.bashrc 
