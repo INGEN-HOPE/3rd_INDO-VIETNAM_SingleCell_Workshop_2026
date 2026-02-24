@@ -228,9 +228,9 @@ rsync –avP \<PATH/TO/RAW/RUN/READS/DIR\> \<PATH/TO/YOUR/WORKING/DIR/\>
 
 <img src="images/media/image44.png" style="width:6.26772in;height:0.68056in" />
 
-## **6. Demultiplexing**
+## **6. Basecalling and Demultiplexing**
 
-Demultiplexing is the computational unwinding of the pooled sequencing data. It uses the sample-specific index sequences to sort a single massive data stream into individual, sample-specific FASTQ files, allowing for independent downstream analysis.
+Basecalling algorithms process the raw signal to decode the sequence of bases within strands of DNA or RNA into data stored in BAM or FASTQ files. Demultiplexing is the computational unwinding of the pooled sequencing data. It uses the sample-specific index sequences to sort a single massive data stream into individual, sample-specific FASTQ files, allowing for independent downstream analysis.
 
 **bcl2fastq**
 
