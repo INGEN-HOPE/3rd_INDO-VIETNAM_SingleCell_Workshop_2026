@@ -14,12 +14,14 @@
 </table>
 
 ## **1. Computational Requirements**
-
+For a complete Single-cell data analysis with around 20-30 samples the computational requirements are as follows:
 Memory = 600 - 800 GB
 
 Processor = 4 - 8
 
 Operating System = Linux or MacOS (Windows for Downstream Analysis)
+
+P.S. for this tutorial we will only use a small subset of 4 samples so min of 8 GB RAM and 50-100 GB storage will be enough.
 
 **Storage**
 
