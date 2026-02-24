@@ -14,7 +14,8 @@
 </table>
 
 ## **1. Computational Requirements**
-For a complete Single-cell data analysis with around 20-30 samples the computational requirements are as follows:
+For a complete Single-cell data analysis with atleast 10 samples the computational requirements are as follows:
+
 Memory = 600 - 800 GB
 
 Processor = 4 - 8
