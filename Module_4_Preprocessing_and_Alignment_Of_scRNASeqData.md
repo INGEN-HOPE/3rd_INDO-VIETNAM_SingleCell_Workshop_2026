@@ -325,219 +325,42 @@ STAR --runThreadN 12 \
 | --outSAMtype BAM SortedByCoordinate              | Outputs coordinate-sorted BAM file (required when using --outSAMattributes) |
 | --limitBAMsortRAM                   | Prevents excessive memory use during BAM sorting |
 
-**Why Use Two-Pass Mode? (Optional )**
-
---twopassMode Basic allows STAR to:
-
-- Perform initial alignment
-
-- Detect novel splice junctions
-
-- Re-align reads using improved splice database
-
-This improves mapping accuracy in RNA-seq datasets and is useful for detecting novel splice junctions.
-
-**Evaluating Alignment Quality**
-
-**To extract key alignment statistics:**
-
-```r
-grep "Number of input reads" ../path/to/b13st2/Log.final.out
-grep "Uniquely mapped reads %" ../path/to/b13st2/Log.final.out
-```
-
-**Example code:**
-
-```r
-grep "Number of input reads" ../results/star/b13st2/Log.final.out
-grep "Uniquely mapped reads %" ../results/star/b13st2/Log.final.out
-```
-
-**Example Output:**
+**Execution:**
 
 <img src="images/media/image54.png" style="width:6.5in;height:0.54167in" />
 
-### **Number of Input Reads**
-
-This value should match the number of extracted transcript reads from the previous step. Consistency in the transcript reads count signifies no data loss during alignment.
-
-**Uniquely Mapped Reads %**
-
-For scRNA-seq data:
-
-- 65–85% unique mapping is typical
-
-- 70% is considered good
-
-- Lower values may indicate contamination or reference mismatch
-
-A mapping rate of ~80% suggests high alignment along with effective preprocessing.
-
-## **4. Assigning Aligned Reads to Transcripts Using featureCounts**
-
-After aligning reads to the reference genome, the next step is to determine which transcript (or gene) each aligned read belongs to. This process is called **feature assignment**.
-
-We use featureCounts to assign reads to transcript features along with adding gene/transcript tags into the BAM file and preparing data for UMI-based deduplication.
-
-**featureCounts Command**
-
-```r
-featureCounts \
--a ../path/to/gencode.v49.annotation.gtf \
--o ../path/to/b13st2/transcript_stats.txt \
--R BAM \
--T 12 \
--t exon \
--g transcript_id \
--O -M --fraction \
-/path/to/b13st2/Aligned.sortedByCoord.out.bam
-```
-
-**Example featureCounts Command**
-
-```r
-featureCounts \
--a ../reference/gtf/gencode.v49.annotation.gtf \
--o ../results/star/b13st2/transcript_stats.txt \
--R BAM \
--T 12 \
--t exon \
--g transcript_id \
--O -M --fraction \
-../results/star/b13st2/Aligned.sortedByCoord.out.bam
-```
-
-The featureCounts-modified BAM is renamed, sorted, and indexed to prepare it for UMI-based transcript counting.
-
-```r
-mv Aligned.sortedByCoord.out.bam.featureCounts.bam assigned_transcript.bam
-samtools sort -o final_transcript_sorted.bam assigned_transcript.bam
-samtools index final_transcript_sorted.bam
-```
-
-| **Parameter**    | **Description**                            |
-|------------------|--------------------------------------------|
-| -a               | Annotation (GTF) file                      |
-| -o               | Output count statistics file               |
-| -R BAM           | Writes transcript assignment into BAM tags |
-| -T 12            | Number of CPU threads                      |
-| -t exon          | Count reads overlapping exon features      |
-| -g transcript_id | Group reads by transcript ID               |
-| -O               | Allow reads overlapping multiple features  |
-| -M               | Allow multi-mapping reads                  |
-| --fraction       | Distribute multi-mapped reads fractionally |
-
-## 
-
-**featureCounts Summary**
-
-From the log file:
-
-<img src="images/media/image56.png" style="width:4.65625in;height:0.83333in" />
-
-**Interpretation of Key Terms**
-
-- **Total alignments  
-  > **Total number of aligned reads provided to featureCounts.
-
-- **Successfully assigned alignments  
-  > **Reads that overlapped annotated exon regions and were assigned to a transcript.
-
-- **58.9% assignment rate** means nearly 59% of aligned reads map to annotated exons while the remaining reads may map to intronic regions or map ambiguously.
-
-**Output Files Generated**
-
-**Transcript Count File Preview**
-
-| head -n 10 /path/to/b13st2/transcript_stats.txt |
-|-------------------------------------------------|
-
-<img src="images/media/image60.png" style="width:6.5in;height:1.30556in" />Each row represents one transcript, associated genomic coordinates and the number of reads assigned.
-
-## **5. UMI-Based Deduplication and Final Transcript–Cell Count Matrix**
-
-In single-cell RNA-seq, PCR amplification introduces duplicate reads originating from the same original RNA molecule. If not corrected, these duplicates will artificially inflate expression values and may distort cell clustering introducing bias in downstream differential expression analysis. Unique Molecular Identifiers (UMIs) allow us to collapse PCR duplicates. Using **umi_tools count,** we can collapse reads sharing the same cell barcode and UMI.
-
-**UMI Counting**
-
-```r
-umi_tools count \
---per-gene \
---gene-tag=XT \
---assigned-status-tag=XS \
---per-cell \
---stdin /path/to/b13st2/final_transcript_sorted.bam \
---stdout /path/to/b13st2_counts_transcript.tsv.gz
-```
-
-**Example UMI counting**
-
-```r
-umi_tools count \
---per-gene \
---gene-tag=XT \
---assigned-status-tag=XS \
---per-cell \
---stdin ../results/star/b13st2/final_transcript_sorted.bam \
---stdout ../results/counts/b13st2_counts_transcript.tsv.gz
-```
-
-| **Parameter**            | **Description**                                     |
-|--------------------------|-----------------------------------------------------|
-| --per-gene               | Count reads grouped by transcript/gene              |
-| --gene-tag=XT            | Tag added by featureCounts containing transcript ID |
-| --assigned-status-tag=XS | Indicates assignment status of each read            |
-| --per-cell               | Generate counts separately for each cell barcode    |
-| --stdin                  | Input BAM file with transcript assignments          |
-| --stdout                 | Output compressed transcript–cell count matrix      |
-
-From the UMI-tools log:
-
-<img src="images/media/image58.png" style="width:5.00521in;height:2.26999in" />
-
-**Input Reads:** 35,904,940 reads are aligned reads provided to UMI-tools.
-
-**Read skipped, no tag:** 14,757,548 reads lacked proper gene assignment or required tags.
-
-**Post-deduplication reads counted:** 6,224,561
-
-This means that approximately 6.2 million unique molecules were detected and further signifies that a large proportion of reads were PCR duplicates and collapsed. This is expected in scRNA-seq datasets.
-
-**Preview of Final Count Matrix**
-
-```r
-zcat /path/to/b13st2_counts_transcript.tsv.gz | head -n 3 | awk 'NR==1{print $1"\t"$2"\t"$3} NR&gt;1{split($1,a,","); print a[1]"\t"$2"\t"$3' | column -t
-```
-
-<img src="images/media/image61.png" style="width:6.5in;height:0.94976in" />
-
-**Understanding the Columns**
-
-| ***Column*** | ***Description***          |
-|--------------|----------------------------|
-| gene         | Transcript ID(s)           |
-| cell         | Cell barcode               |
-| count        | Number of unique molecules |
-
-Each row represents one transcript detected in one cell with its UMI-collapsed count.
-
-**Number of Detected cells**
-
-| zcat b13st2_counts_transcript.tsv.gz \| cut -f2 \| sort \| uniq \| wc -l |
-|--------------------------------------------------------------------------|
-
-**Example output:**
+**Example output files:**
 
 <img src="images/media/image52.png" style="width:5.78125in;height:0.375in" />
 
-This indicates that around 1,480 unique cell barcodes were detected in the final matrix which represent high-confidence cells after filtering and deduplication.
+| **STARsolo Output Files**                  |                                                  |
+|--------------------------------------------|--------------------------------------------------|
+| ***File Name***                            | ***Description***                                |
+| Aligned.sortedByCoord.out.bam              | Coordinate-sorted BAM file containing aligned reads with CB (cell barcode) and UB (UMI) tags (if enabled). |
+| Log.out                                    | Complete run log showing STAR execution details, parameter settings, and runtime information. |
+| Log.final.out                              | Summary statistics of alignment (mapping rate, uniquely mapped reads, multimappers, etc.). |
+| Log.progress.out                           | Real-time progress report generated during alignment (useful for monitoring long runs). |
+| SJ.out.tab                                 | Detected splice junctions from alignment (useful for splicing analysis or QC). |
+| Solo.out/                                  | Directory containing STARsolo gene expression outputs (matrix.mtx, barcodes.tsv, features.tsv, filtering results, etc.). |
 
 **Interpretation of Results**
 
-| **Metric**           | **Observed Value** | **Interpretation**            |
-|----------------------|--------------------|-------------------------------|
-| Input reads          | 35.9M              | Reads aligned to genome       |
-| Molecules counted    | 6.2M               | Unique RNA molecules          |
-| Final cells detected | 1,480              | High-confidence cell barcodes |
+Solo.out/
+└── Gene/
+    ├── raw/
+    │   ├── matrix.mtx
+    │   ├── barcodes.tsv
+    │   ├── features.tsv
+    ├── Features.stats
+    ├── Summary.csv
+    ├── UMIperCellSorted.txt
 
-**The generated count matrices will next be imported to Seurat for downstream analysis**
+**The following generated matrices will next be imported to Seurat for downstream analysis**
+
+| ***File Name*** | ***Description*** |
+|-----------------|------------------|
+| matrix.mtx      | Sparse gene-by-cell count matrix in Matrix Market format (rows = genes, columns = cell barcodes, values = UMI counts). |
+| barcodes.tsv    | List of detected cell barcodes corresponding to matrix columns (one barcode per line). |
+| features.tsv    | Gene annotation file corresponding to matrix rows (typically includes gene ID, gene name, and feature type). |
+
+
