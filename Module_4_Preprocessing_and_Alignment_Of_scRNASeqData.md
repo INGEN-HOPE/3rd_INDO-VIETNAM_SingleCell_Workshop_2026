@@ -13,6 +13,10 @@
 
 ## **1. Overview of the Workflow**
 
+----------------------------------------------------------------------------------
+|FASTQ -> QC -> Whitelist -> UMI Extraction -> STAR -> featureCounts -> UMI Count |
+----------------------------------------------------------------------------------
+
 ## **2. Quality Filtering using fastp**
 
 Before proceeding to barcode processing and alignment, it is essential to evaluate and clean the sequencing reads. Although modern sequencers produce high-quality data, technical artifacts such as low-quality bases and very short reads may still be present. Removing such artifacts improves downstream alignment performance and reduces noise.
