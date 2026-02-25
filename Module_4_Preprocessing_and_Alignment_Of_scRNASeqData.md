@@ -289,17 +289,19 @@ STAR \
 **Example Star Alignment** :
 
 ```r
-STAR \
---runThreadN 12 \
---genomeDir /lustre/abuzar.khan/scRNAseq/reference_genome/STAR_index_GRCh38_Fixed \
---readFilesIn ../results/extracted/b13st2_R2_extracted.fastq.gz \
+#Aligning BD Rhapsody WTA data
+/path/to/STAR --runThreadN 12 \
+--genomeDir /path/to/STAR/ \
+--readFilesIn <Sample>_R2.fastq.gz <Sample>_R1.fastq.gz \
 --readFilesCommand zcat \
---outFileNamePrefix ../results/star/b13st2/ \
---outSAMtype BAM SortedByCoordinate \
---twopassMode Basic \
---outFilterScoreMinOverLread 0.3 \
---outFilterMatchNminOverLread 0.3 \
---clip3pAdapterSeq AAAAAA \
+--soloType CB_UMI_Complex \
+--soloCBmatchWLtype 1MM \
+--soloCBposition 0_0_0_8 0_13_0_21 0_26_0_34 \
+--soloUMIposition 0_35_0_43 \
+--soloCBwhitelist Rhapsody_CB1.txt Rhapsody_CB2.txt Rhapsody_CB3.txt \
+--outFileNamePrefix ./star_solo \
+--outSAMattributes CB UB \
+--outSAMtype BAM SortedByCoordinate
 --limitBAMsortRAM 60000000000
 ```
 
@@ -313,7 +315,7 @@ STAR \
 | --outFileNamePrefix                 | Directory and prefix for output files            |
 | --outSAMtype BAM SortedByCoordinate | Output sorted BAM file directly                  |
 | --twopassMode Basic                 | Improves splice junction detection               |
-| --outFilterScoreMinOverLread 0.3    | Relaxed alignment score threshold                |
+| --soloType CB_UMI_Complex           | Complex barcodes are activated using CB_UMI_Complex Simple barcodes are activated using CB_UMI_Simple                |
 | --outFilterMatchNminOverLread 0.3   | Relaxed minimum matched bases threshold          |
 | --clip3pAdapterSeq AAAAAA           | Clips polyA tails at 3′ end                      |
 | --limitBAMsortRAM                   | Prevents excessive memory use during BAM sorting |
