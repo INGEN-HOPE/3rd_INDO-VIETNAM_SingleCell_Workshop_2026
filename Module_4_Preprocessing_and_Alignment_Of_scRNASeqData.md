@@ -343,8 +343,9 @@ STAR --runThreadN 12 \
 | SJ.out.tab                                 | Detected splice junctions from alignment (useful for splicing analysis or QC). |
 | Solo.out/                                  | Directory containing STARsolo gene expression outputs (matrix.mtx, barcodes.tsv, features.tsv, filtering results, etc.). |
 
-**Interpretation of Results**
 
+**Interpretation of Results**
+```r
 Solo.out/
 └── Gene/
     ├── raw/
@@ -354,6 +355,7 @@ Solo.out/
     ├── Features.stats
     ├── Summary.csv
     ├── UMIperCellSorted.txt
+```
 
 **The following generated matrices will next be imported to Seurat for downstream analysis**
 
