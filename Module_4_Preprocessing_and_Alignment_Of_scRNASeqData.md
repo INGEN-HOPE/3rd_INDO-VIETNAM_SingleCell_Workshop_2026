@@ -272,27 +272,28 @@ In BD Rhapsody data
 **STAR Alignment**
 
 ```r
-STAR \
---runThreadN 12 \
---genomeDir </Path/to/star_index> \
---readFilesIn <R2_fastq.gz> \
+#Aligning BD Rhapsody WTA data
+STAR --runThreadN 12 \
+--genomeDir /path/to/STAR/ \
+--readFilesIn <Sample>_R2.fastq.gz <Sample>_R1.fastq.gz \
 --readFilesCommand zcat \
---outFileNamePrefix <sample_name> \
---outSAMtype BAM SortedByCoordinate \
---twopassMode Basic \
---outFilterScoreMinOverLread 0.3 \
---outFilterMatchNminOverLread 0.3 \
---clip3pAdapterSeq AAAAAA \
+--soloType CB_UMI_Complex \
+--soloCBmatchWLtype 1MM \
+--soloCBposition 0_0_0_8 0_13_0_21 0_26_0_34 \
+--soloUMIposition 0_35_0_43 \
+--soloCBwhitelist Rhapsody_CB1.txt Rhapsody_CB2.txt Rhapsody_CB3.txt \
+--outFileNamePrefix ./star_solo \
+--outSAMattributes CB UB \
+--outSAMtype BAM SortedByCoordinate
 --limitBAMsortRAM 60000000000
 ```
 
 **Example Star Alignment** :
 
 ```r
-#Aligning BD Rhapsody WTA data
-/path/to/STAR --runThreadN 12 \
+STAR --runThreadN 12 \
 --genomeDir /path/to/STAR/ \
---readFilesIn <Sample>_R2.fastq.gz <Sample>_R1.fastq.gz \
+--readFilesIn b08st05_R2_10k.fastq.gz b08st05_R1_10k.fast \
 --readFilesCommand zcat \
 --soloType CB_UMI_Complex \
 --soloCBmatchWLtype 1MM \
@@ -315,9 +316,13 @@ STAR \
 | --outFileNamePrefix                 | Directory and prefix for output files            |
 | --outSAMtype BAM SortedByCoordinate | Output sorted BAM file directly                  |
 | --twopassMode Basic                 | Improves splice junction detection               |
-| --soloType CB_UMI_Complex           | Complex barcodes are activated using CB_UMI_Complex Simple barcodes are activated using CB_UMI_Simple                |
-| --outFilterMatchNminOverLread 0.3   | Relaxed minimum matched bases threshold          |
-| --clip3pAdapterSeq AAAAAA           | Clips polyA tails at 3′ end                      |
+| --soloType CB_UMI_Complex                        | Activates complex barcode mode (use CB_UMI_Simple for simple barcodes) |
+| --soloCBposition 0_0_0_8 0_13_0_21 0_26_0_34     | Defines positions of 3 barcode segments on the read (format: startAnchor_startDistance_endAnchor_endDistance). <br>• 0_0_0_8 → first 9 bases <br>• 0_13_0_21 → bases 13–21 (9 bp) <br>• 0_26_0_34 → bases 26–34 (9 bp) |
+| --soloUMIposition 0_35_0_43                      | Defines UMI position on the read (8 bp UMI following third barcode block) |
+| --soloCBwhitelist CL1S.txt CL2S.txt CL3S.txt     | Specifies whitelist files for barcode segments (CLS1–3 from BD Rhapsody barcode structure; one barcode per line, no header) |
+| --soloCBmatchWLtype 1MM                          | Allows up to 1 mismatch between detected barcode and whitelist |
+| --outSAMattributes CB UB                         | Adds corrected Cell Barcode (CB) and UMI (UB) tags to BAM output |
+| --outSAMtype BAM SortedByCoordinate              | Outputs coordinate-sorted BAM file (required when using --outSAMattributes) |
 | --limitBAMsortRAM                   | Prevents excessive memory use during BAM sorting |
 
 **Why Use Two-Pass Mode? (Optional )**
