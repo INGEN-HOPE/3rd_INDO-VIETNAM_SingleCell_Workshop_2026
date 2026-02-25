@@ -306,6 +306,9 @@ STAR --runThreadN 12 \
 --limitBAMsortRAM 60000000000
 ```
 
+** **NOTE** In --readFilesIn parameter Read 2 or <_R2.fastq.gz> is mentioned first and then Read 1 or <_R1.fastq.gz>  **
+
+
 | **STAR Parameters (for alignment)** |                                                  |
 |-------------------------------------|--------------------------------------------------|
 | ***Parameter***                     | ***Description***                                |
@@ -324,6 +327,8 @@ STAR --runThreadN 12 \
 | --outSAMattributes CB UB                         | Adds corrected Cell Barcode (CB) and UMI (UB) tags to BAM output |
 | --outSAMtype BAM SortedByCoordinate              | Outputs coordinate-sorted BAM file (required when using --outSAMattributes) |
 | --limitBAMsortRAM                   | Prevents excessive memory use during BAM sorting |
+
+You can explore STAR manual for additional parameters as per your dataset and requirements. 
 
 **Execution:**
 
@@ -360,6 +365,12 @@ Solo.out/
     ├── Summary.csv
     ├── UMIperCellSorted.txt
 ```
+| ***File Name***        | ***Description*** |
+|------------------------|------------------|
+| Features.stats         | Per-gene statistics including total reads, UMIs, and detection metrics across all barcodes. |
+| Summary.csv            | Summary metrics of the STARsolo run (estimated number of cells, mean/median reads per cell, median genes per cell, mapping statistics, etc.). |
+| UMIperCellSorted.txt   | List of cell barcodes sorted by total UMI counts (used for knee plot generation and manual cell calling). |
+
 
 **The following generated matrices will next be imported to Seurat for downstream analysis**
 
