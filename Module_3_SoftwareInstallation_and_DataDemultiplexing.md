@@ -14,12 +14,15 @@
 </table>
 
 ## **1. Computational Requirements**
+For a complete Single-cell data analysis with atleast 10 samples the computational requirements are as follows:
 
 Memory = 600 - 800 GB
 
 Processor = 4 - 8
 
 Operating System = Linux or MacOS (Windows for Downstream Analysis)
+
+P.S. for this tutorial we will only use a small subset of 4 samples so min of 8 GB RAM and 50-100 GB storage will be enough.
 
 **Storage**
 
@@ -60,7 +63,17 @@ bash Miniconda3-latest-Linux-x86_64.sh
 
 > <img src="images/media/image47.png" style="width:5.42343in;height:1.2608in" />
 
-8.  Close and re-open your terminal window for the installation to fully take effect, or use the following command to refresh the terminal.
+8.  Close and re-open your terminal window for the installation to fully take effect, or use the following command to refresh the terminal. To check if conda installed correctly type
+
+```r
+conda --version
+```
+
+10.  If restarting the terminal doesn't initiate conda you may need to export the path using following command. Change the path to your conda bin folder.
+
+```r
+export PATH="~/miniconda3/bin:$PATH"
+```
 
 ```r
 source ~/.bashrc 
@@ -215,9 +228,9 @@ rsync –avP \<PATH/TO/RAW/RUN/READS/DIR\> \<PATH/TO/YOUR/WORKING/DIR/\>
 
 <img src="images/media/image44.png" style="width:6.26772in;height:0.68056in" />
 
-## **6. Demultiplexing**
+## **6. Basecalling and Demultiplexing**
 
-Demultiplexing is the computational unwinding of the pooled sequencing data. It uses the sample-specific index sequences to sort a single massive data stream into individual, sample-specific FASTQ files, allowing for independent downstream analysis.
+Basecalling algorithms process the raw signal to decode the sequence of bases within strands of DNA or RNA into data stored in BAM or FASTQ files. Demultiplexing is the computational unwinding of the pooled sequencing data. It uses the sample-specific index sequences to sort a single massive data stream into individual, sample-specific FASTQ files, allowing for independent downstream analysis.
 
 **bcl2fastq**
 
@@ -307,7 +320,7 @@ bcl2fastq \
 </tbody>
 </table>
 
-The reads obtained after demultiplexing will be in FATSQ format from the experiment including Read1(R1) and Read2(R2) files for the Whole Transcriptome Analsysis (WTA) RNA library, Sample Tag and BD® AbSeq libraries.
+The reads obtained after demultiplexing will be in FASTQ format from the experiment including Read1 (R1) and Read2 (R2) files for the Whole Transcriptome Analsysis (WTA) RNA library, Sample Tag and BD AbSeq libraries.
 
 The assays are used to create sequencing libraries from single-cell multiomic experiments. R1 reads contain information on the cell label and molecular identifier, whereas, R2 reads contain information on the bioproduct.
 
