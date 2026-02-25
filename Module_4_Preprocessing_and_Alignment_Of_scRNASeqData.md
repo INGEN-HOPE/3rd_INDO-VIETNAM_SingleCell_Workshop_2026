@@ -327,7 +327,7 @@ STAR --runThreadN 12 \
 
 **Execution:**
 
-<img src="images/media/image54.PNG" style="width:15in;height:2in" />
+<img src="images/media/image54.PNG" style="width:15in;height:1in" />
 
 **Example output files:**
 
