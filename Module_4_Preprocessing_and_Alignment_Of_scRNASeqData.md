@@ -352,6 +352,10 @@ Solo.out/
     │   ├── matrix.mtx
     │   ├── barcodes.tsv
     │   ├── features.tsv
+    ├── filtered/
+    │   ├── matrix.mtx
+    │   ├── barcodes.tsv
+    │   ├── features.tsv
     ├── Features.stats
     ├── Summary.csv
     ├── UMIperCellSorted.txt
