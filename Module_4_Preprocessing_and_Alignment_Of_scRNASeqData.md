@@ -13,9 +13,9 @@
 
 ## **1. Overview of the Workflow**
 
-----------------------------------------------------------------------------------
-|FASTQ -> QC -> Whitelist -> UMI Extraction -> STAR -> featureCounts -> UMI Count |
-----------------------------------------------------------------------------------
+
+| FASTQ -> QC -> Whitelist -> UMI Extraction -> STAR -> featureCounts -> UMI Count |
+|----------------------------------------------------------------------------------|
 
 ## **2. Quality Filtering using fastp**
 
