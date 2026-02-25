@@ -327,11 +327,11 @@ STAR --runThreadN 12 \
 
 **Execution:**
 
-<img src="images/media/image54.png" style="width:6.5in;height:0.54167in" />
+<img src="images/media/image54.PNG" style="width:6.5in;height:0.54167in" />
 
 **Example output files:**
 
-<img src="images/media/image52.png" style="width:5.78125in;height:0.375in" />
+<img src="images/media/image52.PNG" style="width:5.78125in;height:0.375in" />
 
 | **STARsolo Output Files**                  |                                                  |
 |--------------------------------------------|--------------------------------------------------|
