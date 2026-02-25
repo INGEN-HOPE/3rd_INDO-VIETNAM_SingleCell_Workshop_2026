@@ -292,7 +292,7 @@ STAR --runThreadN 12 \
 
 ```r
 STAR --runThreadN 12 \
---genomeDir /path/to/STAR/ \
+--genomeDir reference/star_index \
 --readFilesIn b08st05_R2_10k.fastq.gz b08st05_R1_10k.fast \
 --readFilesCommand zcat \
 --soloType CB_UMI_Complex \
