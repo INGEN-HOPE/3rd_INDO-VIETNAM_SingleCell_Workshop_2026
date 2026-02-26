@@ -139,10 +139,13 @@ These files can be read into R using various functions including:
  setwd("E:/3rd_INDO-VIETNAM_WORKSHOP/Data/")                           
                                                                        
  #Looping through each sample directory to create a final Seurat object                                                                
-                                                                                                                                           
-    seurat_data <- Read10X(c("b08st05", "b08st06","b14st04","b14st05"))                            
-    seurat_obj <- CreateSeuratObject(counts = seurat_data,               
-                                      min.features = 100)                                                     
+for (file in c("b08st05", "b08st06","b14st04","b14st05")){
+seurat_data <- Read10X(data.dir = file)
+seurat_obj <- CreateSeuratObject(counts = seurat_data, 
+                                 min.features = 100, 
+                                 project = file)
+assign(file, seurat_obj)
+}                                                 
                                                                       
  head(seurat_obj@meta.data)                                            
 ```
