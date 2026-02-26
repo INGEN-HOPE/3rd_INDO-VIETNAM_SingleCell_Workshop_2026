@@ -339,7 +339,7 @@ out outlier cells:
 Let us quickly see the number of cells we are retaining:
 
 ```r
-  table(merged_seurat\$keep)
+  table(merged_seurat$keep)
 ```
 ```r
 #Output:
