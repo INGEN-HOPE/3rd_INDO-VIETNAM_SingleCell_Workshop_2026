@@ -124,7 +124,7 @@ These files can be read into R using various functions including:
 ```r
  #Read in sample directory to create sparse matrix                     
                                                                        
- seurat_data <- read10X("data.dir = Data/b08st05")                     
+ seurat_data <- Read10X("data.dir = Data/b08st05")                     
                                                                        
  # Creating the Seurat object                                         
                                                                        
