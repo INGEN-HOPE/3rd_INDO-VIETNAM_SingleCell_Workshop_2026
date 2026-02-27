@@ -668,7 +668,7 @@ resolution to see how clustering changes with resolution.
  merged_seurat <- FindClusters(merged_seurat, resolution = 1, algorithm=4)                                                          
  p1 <- DimPlot(merged_seurat, reduction = "umap", label = TRUE)     
                                                                        
- p + p1 + p2                                                           
+ p0.4 + p0.7 + p1                                                           
 ```
 
 **0.4 0.7 1**
