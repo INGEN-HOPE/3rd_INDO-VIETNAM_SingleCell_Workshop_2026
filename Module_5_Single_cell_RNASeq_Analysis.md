@@ -558,7 +558,7 @@ list of normalised Seurat objects.
 
 ```r
  #Loop through each sample to normalize                                
- split_seurat <-SplitObject(merged_seurat, split.by = orig.ident)
+ split_seurat <-SplitObject(merged_seurat, split.by = "orig.ident")
                                                                    
  split_seurat <- lapply(split_seurat, function(x) {  
    SCTransform(x, verbose = FALSE)                                       
