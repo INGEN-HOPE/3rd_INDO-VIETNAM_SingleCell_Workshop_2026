@@ -719,7 +719,7 @@ case, we are plotting the top 20 markers for each cluster.
 ```r
  #Plot top 20 marker genes for each cluster                            
                                                                        
- DoHeatmap(merged_seurat, features = top_cell_markers\$gene) + NoLegend()                                                            
+ DoHeatmap(merged_seurat, features = top_cell_markers$gene) + NoLegend()                                                            
 ```
 
 ![](images/media/image17.png)
