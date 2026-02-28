@@ -983,5 +983,15 @@ cells:![](images/media/image11.png)
 Do you find any differences between the results from Seurat DE and
 Pseudobulk analysis ?
 
+Extra : To explore your data using ggplot
+```r
+cell_counts <- merged_seurat@meta.data %>%
+      group_by(orig.ident) %>%
+      tally()
 
-
+ggplot(cell_counts, aes(x = orig.ident, y = n, fill = orig.ident)) +
+  geom_bar(stat = "identity") +
+  theme_cowplot() +
+  labs(title = "Number of Cells per Sample", x = "Sample", y = "Cell Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
