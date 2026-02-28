@@ -1009,3 +1009,25 @@ ggplot(df, aes(x = q.value,
   labs(x = "Normalized Enrichment Score", 
        y = "Pathway") 
 ```
+# Volcano Plot
+```r
+# Define significance thresholds
+logFC_cutoff <- 1
+pVal_cutoff <- 0.05
+
+# Add a column to define classification
+markers <- NK_cluster %>%
+  mutate(diffexpressed = case_when(
+    avg_log2FC > logFC_cutoff & p_val_adj < pVal_cutoff ~ "UP", avg_log2FC < -logFC_cutoff & p_val_adj < pVal_cutoff ~ "DOWN", TRUE ~ "NO"
+  ))%>%as.data.frame
+
+
+# Create the plot
+ggplot(data = NK_cluster, aes(x = avg_log2FC, y = -log10(p_val_adj), col = "diffexpressed")) +
+  geom_point(alpha = 0.6, size = 1) +
+  theme_minimal() + xlim(-5,5)+ ylim(0,50)+
+  scale_color_manual(values = c("blue","grey","red"), labels = c("Downregulated","Not Significant","Upregulated")) +
+  geom_vline(xintercept = c(-logFC_cutoff, logFC_cutoff), col = "black", linetype = "dashed") +
+  geom_hline(yintercept = -log10(pVal_cutoff), col = "black", linetype = "dashed") +
+  labs(title = "Volcano Plot Infected vs Healthy", x = "Average Log2 Fold Change", y = "-Log10 Adjusted P-value")
+```
