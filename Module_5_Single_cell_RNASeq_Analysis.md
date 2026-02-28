@@ -995,3 +995,17 @@ ggplot(cell_counts, aes(x = orig.ident, y = n, fill = orig.ident)) +
   labs(title = "Number of Cells per Sample", x = "Sample", y = "Cell Count") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+To visulaize the Enrichr KG Reactome data
+
+```r
+df <- read.csv("Enrichr-KG.csv")
+
+
+# Plot
+ggplot(df, aes(x = q.value, 
+                 y = reorder(Term, q.value))) +
+  geom_point(alpha = 0.75, ) +  # Points with moderate opacity
+  theme_minimal() +
+  labs(x = "Normalized Enrichment Score", 
+       y = "Pathway") 
+```
